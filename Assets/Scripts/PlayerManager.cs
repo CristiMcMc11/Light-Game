@@ -84,20 +84,22 @@ public class PlayerManager : MonoBehaviour
         }
     }
     
-    public IEnumerator Die()
+    public IEnumerator Die(Vector2 playerVelocity)
     {
-        PlayerMovement playerMovement = gameObject.GetComponent<PlayerMovement>();
-        playerMovement.SetManualVelocity(new Vector2(0, 10), blackScreenLerpDuration, true);
 
+        PlayerMovement playerMovement = gameObject.GetComponent<PlayerMovement>();
+        playerMovement.SetManualVelocity(playerVelocity, blackScreenLerpDuration, false);
         
         blackScreen.SetActive(true);
 
         blackScreen.LeanAlpha(1, blackScreenLerpDuration);
         yield return new WaitForSeconds(blackScreenDuration - 0.1f);
-        transform.position = respawnPosition;
-        yield return new WaitForSeconds(0.1f);
-        blackScreen.LeanAlpha(0, blackScreenLerpDuration);
 
-        gameObject.GetComponent<PlayerMovement>().EnableMovement();
+        transform.position = respawnPosition;
+        playerMovement.SetManualVelocity(new Vector2(0, 0), blackScreenLerpDuration, false);
+        yield return new WaitForSeconds(0.1f);
+
+        blackScreen.LeanAlpha(0, blackScreenLerpDuration);
+        playerMovement.EnableMovement();
     }
 }

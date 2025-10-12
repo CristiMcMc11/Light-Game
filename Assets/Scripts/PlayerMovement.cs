@@ -312,11 +312,11 @@ public class PlayerMovement : MonoBehaviour
     {
         if (context.performed && state == PlayerStates.InAir && !disableMovement)
         {
-            if (rb.CircleCast(Vector2.right, rightCastDistance))
+            if (rb.CircleCast(Vector2.right, rightCastDistance) && !rb.CircleCastObject(Vector2.right, rightCastDistance).CompareTag("Cannot Wall Cling"))
             {
                 WallCling(true);
             }
-            else if (rb.CircleCast(Vector2.left, leftCastDistance))
+            else if (rb.CircleCast(Vector2.left, leftCastDistance) && !rb.CircleCastObject(Vector2.left, leftCastDistance).CompareTag("Cannot Wall Cling"))
             {
                 WallCling(false);
             }
@@ -356,7 +356,7 @@ public class PlayerMovement : MonoBehaviour
     }
     #endregion
 
-    #region Manual Movement
+    #region Manual Stuff
     public void DisableMovement()
     {
         manualXInput = 0;
