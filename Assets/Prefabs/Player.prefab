@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8683470309420735891}
   - component: {fileID: 7466020743048432920}
   - component: {fileID: 6124353762465176645}
+  - component: {fileID: 6625674902740973449}
   - component: {fileID: 8654800841368286420}
   - component: {fileID: 3693568639850000706}
   - component: {fileID: 1323327790822127258}
@@ -59,6 +60,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -80,6 +83,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
@@ -155,10 +159,26 @@ MonoBehaviour:
   groundCastDistance: 0.3
   rightCastDistance: 0.2
   leftCastDistance: 0.2
-  flareForce: {x: 5, y: 5}
-  flareTorque: 50
+  cameraFollowGO: {fileID: 0}
   flare: {fileID: 3904417549022440846, guid: 95329abbbd575d34da4f76e01cb5b76e, type: 3}
   playerInput: {fileID: 8654800841368286420}
+--- !u!114 &6625674902740973449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8326640427627309009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6644ba613c06ada4b86e43fe2c52a604, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  previousScene: 
+  useEntrances: 1
+  respawnPosition: {x: 0, y: 0, z: 0}
+  blackScreenLerpDuration: 0.1
+  blackScreenDuration: 0.75
 --- !u!114 &8654800841368286420
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -355,8 +375,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 3904417549022440846, guid: 95329abbbd575d34da4f76e01cb5b76e, type: 3}
-  throwForce: 8.5
-  maxThrowRange: 7
+  defaultForce: 7
+  maxForce: 12
 --- !u!95 &7317154647467420096
 Animator:
   serializedVersion: 7

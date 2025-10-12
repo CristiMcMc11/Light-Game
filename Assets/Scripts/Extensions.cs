@@ -6,7 +6,7 @@ public static class Extensions
 
     public static bool CircleCast(this Rigidbody2D rigidbody, Vector2 direction, float distance = 0.375f, float radius = 0.25f)
     {
-        if (rigidbody.isKinematic)
+        if (rigidbody.bodyType == RigidbodyType2D.Kinematic)
         {
             return false;
         }

@@ -27,6 +27,7 @@ public class LightActivatedDoor : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        //Incremeneting light count every time a light collides (what nah)
         if (collision.gameObject.tag == "Light")
         {
             detectedLightCount++;
@@ -41,10 +42,12 @@ public class LightActivatedDoor : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
+        //Decrementing light count every time a light leaves
         if (collision.gameObject.tag == "Light")
         {
             detectedLightCount--;
 
+            //Closing door if there are no lights
             if (doorOpen && detectedLightCount <= 0 && gameObject.activeSelf)
             {
                 StartCoroutine(CloseDoor());
@@ -63,6 +66,7 @@ public class LightActivatedDoor : MonoBehaviour
             doorPiece.LeanCancel();
         }
 
+        //Open door anim
         doorPiece.LeanMove(originalDoorPosition + offset, doorTweenTime)
                     .setEaseInExpo();
     }
@@ -76,6 +80,7 @@ public class LightActivatedDoor : MonoBehaviour
             doorPiece.LeanCancel();
         }
 
+        //Close door anim
         doorPiece.LeanMove(originalDoorPosition, doorTweenTime)
                     .setEaseInExpo();
 
