@@ -87,9 +87,9 @@ public class PlayerManager : MonoBehaviour
     public IEnumerator Die()
     {
         PlayerMovement playerMovement = gameObject.GetComponent<PlayerMovement>();
-        playerMovement.DisableMovement();
+        playerMovement.SetManualVelocity(new Vector2(0, 10), blackScreenLerpDuration, true);
 
-
+        
         blackScreen.SetActive(true);
 
         blackScreen.LeanAlpha(1, blackScreenLerpDuration);

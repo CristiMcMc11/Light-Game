@@ -379,6 +379,17 @@ public class PlayerMovement : MonoBehaviour
         manualXInput = 0;
         EnableMovement();
     }
+
+    public void SetManualVelocity(Vector2 setVelocity, float timeSeconds, bool enableMovementAfter)
+    {
+        DisableMovement();
+        velocity = setVelocity;
+        
+        if (enableMovementAfter)
+        {
+            EnableMovement();
+        }
+    }
     #endregion
 
     private void OnCollisionStay2D(Collision2D collision)
