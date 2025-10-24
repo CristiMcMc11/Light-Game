@@ -370,6 +370,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void ManualMove(int xInput)
     {
+        xInput = Math.Clamp(xInput, -1, 1);
         DisableMovement();
         manualXInput = xInput;
     }

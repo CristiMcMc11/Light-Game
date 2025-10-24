@@ -177,6 +177,7 @@ MonoBehaviour:
   previousScene: 
   useEntrances: 1
   respawnPosition: {x: 0, y: 0, z: 0}
+  blackScreen: {fileID: 0}
   blackScreenLerpDuration: 0.1
   blackScreenDuration: 0.75
 --- !u!114 &8654800841368286420
@@ -360,7 +361,7 @@ CapsuleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0.025, y: 0}
-  m_Size: {x: 0.7, y: 1}
+  m_Size: {x: 0.7, y: 0.9}
   m_Direction: 0
 --- !u!114 &1323327790822127258
 MonoBehaviour:

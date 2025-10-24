@@ -20,7 +20,7 @@ public class PlayerManager : MonoBehaviour
 
     private void Start()
     {
-        previousScene = GameData.Instance.previousSceneName;  
+        previousScene = GameData.Instance.previousSceneName;
         if (useEntrances)
         {
             FindEntranceAndEnter();
@@ -73,7 +73,7 @@ public class PlayerManager : MonoBehaviour
         {
             RoomEntrance entrance = entranceTransform.GetComponent<RoomEntrance>();
 
-            if (entrance.connectedSceneName == previousScene)
+            if (entrance.connectedSceneName.name == previousScene)
             {
                 entrance.checkForPlayer = false;
                 gameObject.transform.position = entrance.gameObject.transform.position;

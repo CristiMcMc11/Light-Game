@@ -1,14 +1,11 @@
-using NUnit.Framework;
 using UnityEngine;
-using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine.SceneManagement;
-using System.Linq;
 using System.Collections;
-using UnityEngine.UIElements;
 
 public class RoomEntrance : MonoBehaviour
 {
-    [SerializeField] public string connectedSceneName;
+    public SceneAsset connectedSceneName;
     public bool caveStart;
     public GameObject blackScreen;
 
@@ -20,7 +17,10 @@ public class RoomEntrance : MonoBehaviour
     public enum Direction
     {
         Right, 
-        Left 
+        Left,
+        UpRight,
+        UpLeft,
+        Down
     };
     public Direction playerEnterDirection = Direction.Right;
 
@@ -52,22 +52,29 @@ public class RoomEntrance : MonoBehaviour
         GameData.Instance.previousSceneName = SceneManager.GetActiveScene().name;
 
         //Moving player manually based off direction
-        if (playerEnterDirection == Direction.Left)
+        switch (playerEnterDirection)
         {
-            playerMovement.ManualMove(-1);
-        }
-        else
-        {
-            playerMovement.ManualMove(1);
+            case Direction.Left:
+                playerMovement.ManualMove(-1);
+                break;
+
+            case Direction.Right:
+                playerMovement.ManualMove(1);
+                break;
+
+            case Direction.Down:
+                playerMovement.DisableMovement();
+                break;
         }
 
         //doing black screen thingy
+        blackScreen.SetActive(true);
         blackScreen.transform.position = new Vector2(player.transform.position.x, player.transform.position.y);
         blackScreen.LeanAlpha(1, transitionDuration);
 
         yield return new WaitForSeconds(transitionDuration);
 
-        SceneManager.LoadScene(connectedSceneName);
+        SceneManager.LoadScene(connectedSceneName.name);
     }
 
     public IEnumerator EnterRoom(GameObject player)
@@ -79,19 +86,19 @@ public class RoomEntrance : MonoBehaviour
         blackScreen.GetComponent<SpriteRenderer>().color = Color.black;
 
         //Manually moving player
-        if (playerEnterDirection == Direction.Left)
+        switch (playerEnterDirection)
         {
-            playerMovement.ManualMove(1);
-        }
-        else
-        {
-            player.transform.rotation = new Quaternion(0, 180, 0, 0);
-            playerMovement.ManualMove(-1);
-        }
+            case Direction.Left:
+                playerMovement.ManualMove(1);
+                break;
 
-        if (caveStart)
-        {
-            playerMovement.StopManualMovement();
+            case Direction.Right:
+                playerMovement.ManualMove(-1);
+                break;
+
+            case Direction.Down:
+                playerMovement.DisableMovement();
+                break;
         }
 
         yield return new WaitForSeconds(0.25f); //hides the camera moving to the player
@@ -102,6 +109,11 @@ public class RoomEntrance : MonoBehaviour
         yield return new WaitForSeconds(transitionDuration);
 
         playerMovement.StopManualMovement();
+
+        if (caveStart)
+        {
+            Destroy(gameObject);
+        }
     }
 
     //start coroutine wasn't working :(
