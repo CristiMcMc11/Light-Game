@@ -9,6 +9,7 @@ TagManager:
   - Light
   - Black Screen
   - Cannot Wall Cling
+  - CenterPlayerFollowCam
   layers:
   - Default
   - TransparentFX

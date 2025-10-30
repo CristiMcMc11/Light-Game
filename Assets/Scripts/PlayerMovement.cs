@@ -1,4 +1,5 @@
 using System;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem;
@@ -60,6 +61,7 @@ public class PlayerMovement : MonoBehaviour
     public bool isFacingRight { get; private set; } = true;
     [SerializeField] private GameObject cameraFollowGO;
     private CameraFollowObject cameraFollowObject;
+    private float fallSpeedYDampingChangeThreshold;
 
     [Header("")]
 
@@ -81,15 +83,59 @@ public class PlayerMovement : MonoBehaviour
         cameraFollowObject = cameraFollowGO.GetComponent<CameraFollowObject>();
     }
 
+    private void Start()
+    {
+        fallSpeedYDampingChangeThreshold = CameraManager.instance.fallSpeedYDampingChangeThreshold;
+    }
+
     void Update()
     {
+
         //Checking whether or not player is grounded
         bool groundedHit = rb.CircleCast(Vector2.down, groundCastDistance);
 
         SetRotation();
         CheckForWallTouch();
         AirTime();
+        CalculateState(groundedHit);
 
+        //if we are falling past a speed threshold
+        if (velocity.y < fallSpeedYDampingChangeThreshold && !CameraManager.instance.isLerpingYDamping && !CameraManager.instance.lerpedFromPlayerFalling)
+        {
+            CameraManager.instance.isPlayerFalling = true;
+            CameraManager.instance.LerpYDamping(true);
+        }
+
+        //if we are standing still or moving up
+        if (velocity.y >= 0f && !CameraManager.instance.isLerpingYDamping && CameraManager.instance.lerpedFromPlayerFalling)
+        {
+            CameraManager.instance.isPlayerFalling = false;
+
+            //reset it so it can be called again
+            CameraManager.instance.lerpedFromPlayerFalling = false;
+
+            CameraManager.instance.LerpYDamping(false);
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        Gravity();
+        CalculateAcceleration();
+        CalculateForce();
+
+        //Setting velocity.x if not wall clinging
+        if (state != PlayerStates.WallClinging)
+        {
+            velocity.x = (speed * currentSpeedMultiplier * acceleration) + horizontalForce;
+        }
+
+        //Actually moving the player
+        rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
+    }
+
+    private void CalculateState(bool groundedHit)
+    {
         //Calculating Player State
         if (groundedHit)
         {
@@ -112,22 +158,6 @@ public class PlayerMovement : MonoBehaviour
 
         animator.SetBool("Grounded", state == PlayerStates.Grounded);
         animator.SetBool("Wall Clinging", state == PlayerStates.WallClinging);
-    }
-
-    private void FixedUpdate()
-    {
-        Gravity();
-        CalculateAcceleration();
-        CalculateForce();
-
-        //Setting velocity.x if not wall clinging
-        if (state != PlayerStates.WallClinging)
-        {
-            velocity.x = (speed * currentSpeedMultiplier * acceleration) + horizontalForce;
-        }
-
-        //Actually moving the player
-        rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
     }
 
     #region Horizontal Movement
@@ -371,6 +401,9 @@ public class PlayerMovement : MonoBehaviour
     public void ManualMove(int xInput)
     {
         xInput = Math.Clamp(xInput, -1, 1);
+
+        transform.rotation = new Quaternion(0, xInput != 0 ? xInput > 0 ? 0 : 180 : transform.rotation.y, 0, 0);
+
         DisableMovement();
         manualXInput = xInput;
     }

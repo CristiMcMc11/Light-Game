@@ -2,10 +2,13 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using Unity.Cinemachine;
 
 public class RoomEntrance : MonoBehaviour
 {
-    public SceneAsset connectedSceneName;
+    public SceneAsset connectedScene;
+    public CinemachineCamera connectedCamera;
+
     public bool caveStart;
     public GameObject blackScreen;
 
@@ -74,12 +77,14 @@ public class RoomEntrance : MonoBehaviour
 
         yield return new WaitForSeconds(transitionDuration);
 
-        SceneManager.LoadScene(connectedSceneName.name);
+        SceneManager.LoadScene(connectedScene.name);
     }
 
     public IEnumerator EnterRoom(GameObject player)
     {
         PlayerMovement playerMovement = player.GetComponent<PlayerMovement>();
+
+        CameraManager.instance.SetCurrentCamera(connectedCamera);
 
         //making sure the black screen is active cuz i disactivate it cuz its super annoying ts pmo
         blackScreen.SetActive(true);
@@ -98,6 +103,7 @@ public class RoomEntrance : MonoBehaviour
 
             case Direction.Down:
                 playerMovement.DisableMovement();
+                playerMovement.SetManualVelocity(new Vector2(-3, 50), 0, true);
                 break;
         }
 
