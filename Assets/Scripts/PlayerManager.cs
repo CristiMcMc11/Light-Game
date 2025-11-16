@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
-using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -21,6 +20,7 @@ public class PlayerManager : MonoBehaviour
     private void Start()
     {
         previousScene = GameData.Instance.previousSceneName;
+
         if (useEntrances)
         {
             FindEntranceAndEnter();
@@ -39,6 +39,7 @@ public class PlayerManager : MonoBehaviour
             return;
         }
 
+        //print(SceneManager.GetActiveScene().name);
         if (previousScene == "") //No listed previous scene for some reason
         {
             //Checking if any entrances are the cave entrance
@@ -73,6 +74,11 @@ public class PlayerManager : MonoBehaviour
         {
             RoomEntrance entrance = entranceTransform.GetComponent<RoomEntrance>();
 
+            if (entrance.caveStart == true)
+            {
+                continue;
+            }
+
             if (entrance.connectedScene.name == previousScene)
             {
                 entrance.checkForPlayer = false;
@@ -83,13 +89,13 @@ public class PlayerManager : MonoBehaviour
             }
         }
     }
-    
+
     public IEnumerator Die(Vector2 playerVelocity)
     {
 
         PlayerMovement playerMovement = gameObject.GetComponent<PlayerMovement>();
         playerMovement.SetManualVelocity(playerVelocity, blackScreenLerpDuration, false);
-        
+
         blackScreen.SetActive(true);
 
         blackScreen.LeanAlpha(1, blackScreenLerpDuration);
@@ -102,4 +108,39 @@ public class PlayerManager : MonoBehaviour
         blackScreen.LeanAlpha(0, blackScreenLerpDuration);
         playerMovement.EnableMovement();
     }
+
+    #region Save and Load
+
+    public void Save(ref PlayerSaveData data)
+    {
+        data.sceneName = SceneManager.GetActiveScene().name;
+    }
+
+    public void Load(PlayerSaveData data)
+    {
+        SceneManager.LoadScene(data.sceneName);
+        GameData.Instance.previousSceneName = "";
+        print(GameData.Instance.previousSceneName);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            SaveSystem.Save();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            SaveSystem.Load();
+        }
+    }
+
+    #endregion
+}
+
+[System.Serializable]
+public struct PlayerSaveData
+{
+    public string sceneName;
 }

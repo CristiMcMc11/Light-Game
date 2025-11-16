@@ -31,6 +31,17 @@ public class CameraManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        if (currentCamera != null && currentCamera.gameObject.CompareTag("CenterPlayerFollowCam"))
+        {
+            positionComposer.enabled = false;
+            Vector3 startPosition = new Vector3(-10.5477619f, 0.234449387f, -10.000001f);
+            currentCamera.ForceCameraPosition(startPosition, Quaternion.identity);
+            positionComposer.enabled = true;
+        }
+    }
+
     public void SetCurrentCamera(CinemachineCamera camera)
     {
         foreach (CinemachineCamera existingCamera in allCameras)

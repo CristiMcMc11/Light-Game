@@ -54,6 +54,9 @@ public class RoomEntrance : MonoBehaviour
         PlayerMovement playerMovement = player.GetComponent<PlayerMovement>();
         GameData.Instance.previousSceneName = SceneManager.GetActiveScene().name;
 
+        //save the flare positions to be reloaded when the player comes back
+        GameData.Instance.SaveFlarePositionsForCurrentScene();
+
         //Moving player manually based off direction
         switch (playerEnterDirection)
         {
@@ -89,6 +92,9 @@ public class RoomEntrance : MonoBehaviour
         //making sure the black screen is active cuz i disactivate it cuz its super annoying ts pmo
         blackScreen.SetActive(true);
         blackScreen.GetComponent<SpriteRenderer>().color = Color.black;
+
+        //spawn all flares that were there
+        GameData.Instance.LoadSavedFlares();
 
         //Manually moving player
         switch (playerEnterDirection)

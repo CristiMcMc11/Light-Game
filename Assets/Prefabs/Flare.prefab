@@ -109,7 +109,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4547451746460163980}
   - component: {fileID: 3143505849499074869}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Flare Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
